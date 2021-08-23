@@ -26,7 +26,9 @@ services:
     ports:
       - 5432:5432
 
-  #redis-server:
-  #  image: public.ecr.aws/ubuntu/redis:6.0-21.04_edge
-  #  ports:
-  #    - 6379:6379
+  redis-server:
+    image: public.ecr.aws/ubuntu/redis:6.0-21.04_edge
+    ports:
+      - 6379:6379
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes
