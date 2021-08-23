@@ -1,4 +1,4 @@
-FROM bitnami/ruby:2.4.2-r1
+FROM public.ecr.aws/bitnami/ruby:3.0.2-prod
 MAINTAINER massimo@it20.info
 
 ################## BEGIN INSTALLATION ######################
@@ -14,15 +14,18 @@ ENV LANG=en_us.UTF-8
 ENV LC_ALL=C.UTF-8
 ENV RACK_ENV=production
 
-RUN gem install sinatra --no-ri --no-rdoc
-RUN gem install redis --no-ri --no-rdoc
-### hack to allow the setup of the pg gem (which would fail otherwise)
+RUN gem install sinatra --no-document
+RUN gem install redis --no-document
+
+### hack to allow the setup of the pg gem (which would fail otherwise), todo:// review the update. Will cause issues if building for every env
 RUN apt-get update
-RUN apt-get install libpq-dev -y
+RUN apt-get install libpq-dev  build-essential -y
 ### end of hack (this would require additional research and optimization)
-RUN gem install pg --no-ri --no-rdoc
-### this installs the AWS SDK for DynamoDB (so that appserver can talk to DDB Vs the default Postgres/Redis)
-RUN gem install aws-sdk-dynamodb pg --no-ri --no-rdoc
+
+RUN gem install pg --no-document
+RUN gem install aws-sdk-dynamodb --no-document
+RUN gem install thin --no-document
+
 # Set the working directory to /
 WORKDIR /
 ADD startup.sh startup.sh
